@@ -22,7 +22,6 @@ export function MenuUI() {
             <Link className="bg-gray-700 hover:bg-gray-600 p-2 border-b border-gray-800" to="/phone-list-page">Phone List</Link>
             <Link className="bg-gray-700 hover:bg-gray-600 p-2 border-b border-gray-800" to="/phones-page">Phones</Link>
             <Link className="bg-gray-700 hover:bg-gray-600 p-2 border-b border-gray-800" to="/phone-table-page">Phone Table</Link>
-            <Link className="bg-gray-700 hover:bg-gray-600 p-2 border-b border-gray-800" to="/edit-phone-page">Edit Phone</Link>
             <Link className="bg-gray-700 hover:bg-gray-600 p-2 border-b border-gray-800" to="/transfer-phone-page">Transfer Phone</Link>
         </Menu>
     )
