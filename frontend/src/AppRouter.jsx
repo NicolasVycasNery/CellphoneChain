@@ -16,14 +16,14 @@ export function AppRouter() {
     return (
         <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="my-phones-page" element={<MyPhonesPage />} />
-            <Route path="create-phone-page" element={<CreatePhonePage />} />
-            <Route path="phone-list-page" element={<PhoneListPage />} />
-            <Route path="phones-page" element={<PhonesPage />} />
-            <Route path="phone-table-page" element={<PhoneTablePage />} />
-            <Route path="edit-phone-page" element={<EditPhonePage />} />
-            <Route path="transfer-phone-page" element={<TransferPhonePage />} />
-            <Route path="phone-from-page" element={<PhoneFromPage />} />
+            <Route path="/my-phones-page" element={<MyPhonesPage />} />
+            <Route path="/create-phone-page" element={<CreatePhonePage />} />
+            <Route path="/phone-list-page" element={<PhoneListPage />} />
+            <Route path="/phones-page" element={<PhonesPage />} />
+            <Route path="/phone-table-page" element={<PhoneTablePage />} />
+            <Route path="/edit-phone-page" element={<EditPhonePage />} />
+            <Route path="/transfer-phone-page" element={<TransferPhonePage />} />
+            <Route path="/phone-from-page" element={<PhoneFromPage />} />
         </Routes>
     );
 }
