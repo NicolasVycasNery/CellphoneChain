@@ -11,7 +11,7 @@ contract Phones {
 
     Phone[] public phones;
     mapping(uint256 => address) public phoneToOwner;
-    mapping(address => uint256) public ownerPhoneCount;
+    mapping(address => uint256[]) public ownerToPhones;
 
     function createPhone(
         string memory _model_name,
@@ -20,22 +20,19 @@ contract Phones {
     ) public {
         // an owner can only create 10 phones
         require(
-            ownerPhoneCount[msg.sender] < 10,
+            ownerToPhones[msg.sender].length < 10,
             "You can only create 10 phones"
         );
         uint256 id = phones.length;
-        phones.push(Phone({id: id, model_name: _model_name, brand_name: _brand_name, price: _price}));
+        phones.push(Phone(id, _model_name, _brand_name, _price));
         phoneToOwner[id] = msg.sender;
-        ownerPhoneCount[msg.sender]++;
+        ownerToPhones[msg.sender].push(id);
     }
 
     function getPhone(
         uint256 _id
     ) public view returns (uint256, string memory, string memory, uint256) {
-        require(
-            _id < phones.length,
-            "Phone with this id does not exist"
-        );
+        require(_id < phones.length, "Phone with this id does not exist");
         return (
             phones[_id].id,
             phones[_id].model_name,
@@ -47,18 +44,15 @@ contract Phones {
     function getPhonesFromOwner(
         address _owner
     ) public view returns (Phone[] memory) {
-        if (ownerPhoneCount[_owner] == 0) {
-            return new Phone[](0);
+        if (ownerToPhones[_owner].length == 0) {
+            return new Phone[](0); // return empty array
         }
-        Phone[] memory result = new Phone[](ownerPhoneCount[_owner]);
-        uint256 counter = 0;
-        for (uint256 i = 0; i < phones.length; i++) {
-            if (phoneToOwner[i] == _owner) {
-                result[counter] = phones[i];
-                counter++;
-            }
+        uint256[] memory result = ownerToPhones[_owner];
+        Phone[] memory phonesFromOwner = new Phone[](result.length);
+        for (uint256 i = 0; i < result.length; i++) {
+            phonesFromOwner[i] = phones[result[i]];
         }
-        return result;
+        return phonesFromOwner;
     }
 
     function transferPhone(address _to, uint256 _id) public {
@@ -66,9 +60,22 @@ contract Phones {
             msg.sender == phoneToOwner[_id],
             "You are not the owner of this phone"
         );
-        ownerPhoneCount[msg.sender]--;
+        if (msg.sender == _to) {
+            revert("You already own this phone");
+        }
+        if (ownerToPhones[_to].length == 10) {
+            revert("The receiver already owns 10 phones");
+        }
+        // change owner
         phoneToOwner[_id] = _to;
-        ownerPhoneCount[_to]++;
+        // add phone to receiver
+        ownerToPhones[msg.sender].push(_id);
+        // remove phone from sender
+        for (uint256 i = 0; i < ownerToPhones[msg.sender].length; i++) {
+            if (ownerToPhones[msg.sender][i] == _id) {
+                delete ownerToPhones[msg.sender][i];
+            }
+        }
     }
 
     function deletePhone(uint256 _id) public {
@@ -77,7 +84,13 @@ contract Phones {
             "You are not the owner of this phone"
         );
         delete phones[_id];
-        ownerPhoneCount[msg.sender]--;
+        delete phoneToOwner[_id];
+        // remove phone from sender
+        for (uint256 i = 0; i < ownerToPhones[msg.sender].length; i++) {
+            if (ownerToPhones[msg.sender][i] == _id) {
+                delete ownerToPhones[msg.sender][i];
+            }
+        }
     }
 
     function updatePhone(
