@@ -2,6 +2,9 @@
 
 import Swal from 'sweetalert2';
 import contractABI from '../contracts/Phones.sol/Phones.json';
+import { ethers } from 'ethers';
+
+const RPC_URL = "http://localhost:8545";
 
 async function loadWeb3() {
     let web3Provider;
