@@ -68,6 +68,9 @@ export function CreatePhoneForm() {
             <label htmlFor="model">
                 Model
             </label>
+            {errors.model && <span className="text-red-500">
+                This field is required and must be at least 2 characters long
+            </span>}
             <input
                 type="text"
                 name="model"
@@ -83,6 +86,9 @@ export function CreatePhoneForm() {
             <label htmlFor="brand">
                 Brand
             </label>
+            {errors.brand && <span className="text-red-500">
+                This field is required
+            </span>}
             <select
                 name="brand"
                 id="brand"
@@ -100,6 +106,9 @@ export function CreatePhoneForm() {
             <label htmlFor="price">
                 Price
             </label>
+            {errors.price && <span className="text-red-500">
+                This field is required and must be a number between 1 and 1000000
+            </span>}
             <input
                 className="text-black bg-gray-200 p-2 rounded shadow-lg"
                 type="number"
