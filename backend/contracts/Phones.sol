@@ -55,6 +55,25 @@ contract Phones {
         return phonesFromOwner;
     }
 
+    function getPhonesPage(
+        uint256 _page,
+        uint256 _perPage
+    ) public view returns (Phone[] memory) {
+        if (_page == 0 || _perPage == 0) {
+            return new Phone[](0); // return empty array
+        }
+        uint256 start = (_page - 1) * _perPage;
+        uint256 end = start + _perPage;
+        if (end > phones.length) {
+            end = phones.length;
+        }
+        Phone[] memory phonesPage = new Phone[](end - start);
+        for (uint256 i = start; i < end; i++) {
+            phonesPage[i - start] = phones[i];
+        }
+        return phonesPage;
+    }
+
     function transferPhone(address _to, uint256 _id) public {
         require(
             msg.sender == phoneToOwner[_id],
