@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom';
 import { deletePhone } from '../../services/web3';
 import Swal from "sweetalert2";
 
-export function PhoneCard({ phone, isOwner }) {
+export function PhoneCard({ phone, isOwner = false }) {
+
     const { model, brand, price, id } = phone;
+    
     async function handleDelete(e) {
         e.preventDefault();
         const confirm = await Swal.fire({
@@ -40,6 +42,7 @@ export function PhoneCard({ phone, isOwner }) {
             })
         }
     }
+    
     return (
         <div className="flex flex-col gap-2 text-white bg-gray-800 p-4 rounded shadow-lg">
             <p>ID:
