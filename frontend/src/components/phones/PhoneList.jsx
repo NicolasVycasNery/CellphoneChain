@@ -15,11 +15,15 @@ export function PhoneList({ page, limit, isOwner = false }) {
 
     useEffect(() => {
         load();
-    }, [page, pageSize]);
+    }, [page, limit]);
 
     return (
         <div className="grid grid-cols-3 gap-4 my-5 p-5">
-            {phones.length === 0 && <p className="text-white">No phones found</p>}
+            {phones.length === 0 &&
+                <h1 className="text-white text-2xl text-center col-span-3">
+                    No phones found
+                </h1>
+            }
             {phones.map((phone) => {
                 return (
                     <PhoneCard key={phone.id} phone={phone} isOwner={isOwner} />
