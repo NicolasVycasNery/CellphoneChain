@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
 import { createPhone } from "../../services/web3";
-
+import { redirect } from "react-router-dom";
 export function CreatePhoneForm() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -13,14 +13,22 @@ export function CreatePhoneForm() {
 
     async function onSubmit(data) {
         const { model, brand, price } = data;
+        console.log(model, brand, price);
         try {
             const hash = createPhone(model, brand, price);
             Swal.fire({
                 title: 'Success!',
                 text: `Phone ${model} created with the transaction hash ${hash}`,
                 icon: 'success',
-                confirmButtonText: 'Ok'
+                confirmButtonText: 'Ok',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                onClose: () => {
+                    // redirect to my-phones-page
+                    redirect('/my-phones-page');
+                }
             })
+
         } catch (e) {
             Swal.fire({
                 title: 'Error!',
@@ -30,6 +38,30 @@ export function CreatePhoneForm() {
             })
         }
     }
+
+    const brands = [
+        "Apple",
+        "Samsung",
+        "Huawei",
+        "Xiaomi",
+        "Oppo",
+        "Vivo",
+        "Realme",
+        "OnePlus",
+        "Google",
+        "Sony",
+        "Nokia",
+        "Motorola",
+        "LG",
+        "HTC",
+        "Lenovo",
+        "Asus"
+    ]
+
+    // shuffle brands
+    brands.sort(() => Math.random() - 0.5);
+
+
     return (<form onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-2 text-white bg-gray-800 p-4 rounded shadow-lg">
         <div className="flex flex-col">
@@ -43,7 +75,6 @@ export function CreatePhoneForm() {
                 {...register('model', {
                     required: true,
                     minLength: 2,
-                    pattern: /^[A-Z]+$/i,
                 })}
                 className="text-black bg-gray-200 p-2 rounded shadow-lg"
             />
@@ -52,20 +83,17 @@ export function CreatePhoneForm() {
             <label htmlFor="brand">
                 Brand
             </label>
-            <select name="brand" id="brand" className="text-black bg-gray-200 p-2 rounded shadow-lg">
-                <option value="Apple">Apple</option>
-                <option value="Samsung">Samsung</option>
-                <option value="Huawei">Huawei</option>
-                <option value="Xiaomi">Xiaomi</option>
-                <option value="Vivo">Vivo</option>
-                <option value="OnePlus">OnePlus</option>
-                <option value="Google">Google</option>
-                <option value="Sony">Sony</option>
-                <option value="Nokia">Nokia</option>
-                <option value="Motorola">Motorola</option>
-                <option value="LG">LG</option>
-                <option value="HTC">HTC</option>
-                <option value="Lenovo">Lenovo</option>
+            <select
+                name="brand"
+                id="brand"
+                className="text-black bg-gray-200 p-2 rounded shadow-lg"
+                {...register('brand', {
+                    required: true,
+                })}
+            >
+                {brands.map((brand, index) => (
+                    <option key={index} value={brand}>{brand}</option>
+                ))}
             </select>
         </div>
         <div className="flex flex-col">
