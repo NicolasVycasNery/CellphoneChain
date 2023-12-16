@@ -72,6 +72,12 @@ export function PhoneCard({ phone, isOwner = false }) {
                         >
                             Edit
                         </Link>
+                        <Link
+                            to={`/transfer-phone-page?id=${id}`}
+                            className="bg-yellow-400 p-2 rounded shadow-lg text-center"
+                        >
+                            Transfer
+                        </Link>
                         <button onClick={handleDelete} className="bg-red-500 p-2 rounded shadow-lg">Delete</button>
                     </div>
                 )
