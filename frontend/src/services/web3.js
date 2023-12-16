@@ -5,7 +5,7 @@ import contractABI from '../contracts/Phones.sol/Phones.json';
 import { ethers } from 'ethers';
 
 const RPC_URL = "http://localhost:8545";
-const ContractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const ContractAddress = "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9";
 
 async function loadWeb3() {
     let web3Provider;
@@ -66,26 +66,30 @@ export async function createPhone(model, brand, price) {
 export async function getPhone(id) {
     const contract = await getSingerContract();
     const phone = await contract.getPhone(id);
+    const [_id, model, brand, price, owner] = phone;
     const phoneObj = {
-        id: phone.id.toNumber(),
-        model: phone.model,
-        brand: phone.brand,
-        price: phone.price.toNumber(),
-        owner: phone.owner,
+        id: _id.toString(),
+        model,
+        brand,
+        price: price.toString(),
+        owner,
     }
     return phoneObj;
+
 }
 
 export async function getPhonesFromOwner(address) {
     const contract = await getSingerContract();
     const phones = await contract.getPhonesFromOwner(address);
     const phonesObj = phones.map(phone => {
+        console.log(phone);
+        const [_id, model, brand, price, owner] = phone;
         return {
-            id: phone.id.toNumber(),
-            model: phone.model,
-            brand: phone.brand,
-            price: phone.price.toNumber(),
-            owner: phone.owner,
+            id: _id.toString(),
+            model,
+            brand,
+            price: price.toString(),
+            owner,
         }
     })
     return phonesObj;
@@ -95,12 +99,13 @@ export async function getPhonesPage(page, limit) {
     const contract = await getSingerContract();
     const phones = await contract.getPhonesPage(page, limit);
     const phonesObj = phones.map(phone => {
+        const [id, model, brand, price, owner] = phone;
         return {
-            id: phone.id.toNumber(),
-            model: phone.model,
-            brand: phone.brand,
-            price: phone.price.toNumber(),
-            owner: phone.owner,
+            id: id.toString(),
+            model,
+            brand,
+            price: price.toString(),
+            owner,
         }
     })
     return phonesObj;
