@@ -9,7 +9,6 @@ import { MyPhonesPage } from './components/pages/MyPhonesPage'
 import { PhoneFromPage } from './components/pages/PhoneFromPage'
 import { PhoneListPage } from './components/pages/PhoneListPage'
 import { PhoneTablePage } from './components/pages/PhoneTablePage'
-import { PhonesPage } from './components/pages/PhonesPage'
 import { TransferPhonePage } from './components/pages/TransferPhonePage'
 
 export function AppRouter() {
@@ -19,7 +18,6 @@ export function AppRouter() {
             <Route path="/my-phones-page" element={<MyPhonesPage />} />
             <Route path="/create-phone-page" element={<CreatePhonePage />} />
             <Route path="/phone-list-page" element={<PhoneListPage />} />
-            <Route path="/phones-page" element={<PhonesPage />} />
             <Route path="/phone-table-page" element={<PhoneTablePage />} />
             <Route path="/edit-phone-page" element={<EditPhonePage />} />
             <Route path="/transfer-phone-page" element={<TransferPhonePage />} />
