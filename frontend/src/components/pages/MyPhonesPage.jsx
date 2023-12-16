@@ -14,7 +14,12 @@ export function MyPhonesPage() {
         load();
     }, []);
     return (
-        <section className="grid grid-cols-3 gap-4">
+        <section className="grid grid-cols-3 gap-4 mt-4 mx-4">
+            {
+                phones.length === 0 && <h1 className="text-white text-2xl text-center col-span-3">
+                    You have no phones.
+                </h1>
+            }
             {phones.map(phone => (
                 <PhoneCard key={phone.id} phone={phone} isOwner={true} />
             ))}
