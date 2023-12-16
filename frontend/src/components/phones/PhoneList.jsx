@@ -18,7 +18,7 @@ export function PhoneList({ page, limit, isOwner = false }) {
     }, [page, pageSize]);
 
     return (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 my-5 p-5">
             {phones.length === 0 && <p className="text-white">No phones found</p>}
             {phones.map((phone) => {
                 return (
