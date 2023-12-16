@@ -6,7 +6,7 @@ export function PhoneTableHeader({
             <tr className="bg-gray-700 text-white">
                 {columnNames.map((columnName) => (
                     <th
-                        className="bg-gray-800 text-white text-left px-4 py-2"
+                        className="bg-gray-700 text-white text-left px-4 py-2"
                         key={columnName}>{columnName}</th>
                 ))}
             </tr>
