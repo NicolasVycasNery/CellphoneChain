@@ -1,11 +1,15 @@
+import React, { useState } from 'react';
+import { PhoneTable } from '../phones/PhoneTable';
+
+
 export function PhoneTablePage() {
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
     return (
         <section className="flex flex-col items-center">
             <h1 className="text-2xl text-white my-5">Phone Table</h1>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 mb-5">
                 <div>
                     <label htmlFor="page">Page</label>
                     <input
@@ -13,7 +17,14 @@ export function PhoneTablePage() {
                         name="page"
                         id="page"
                         value={page}
-                        onChange={(e) => setPage(e.target.value)}
+                        onChange={(e) => {
+                            // page cannot be less than 1
+                            if (e.target.value < 0) {
+                                setPage(0);
+                            } else {
+                                setPage(e.target.value);
+                            }
+                        }}
                         className="bg-gray-800 text-white rounded shadow-lg"
                     />
                 </div>
