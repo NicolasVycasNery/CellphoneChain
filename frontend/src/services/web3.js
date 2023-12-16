@@ -5,7 +5,7 @@ import contractABI from '../contracts/Phones.sol/Phones.json';
 import { ethers } from 'ethers';
 
 const RPC_URL = "http://localhost:8545";
-const ContractAddress = "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9";
+const ContractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 async function loadWeb3() {
     let web3Provider;
@@ -82,7 +82,6 @@ export async function getPhonesFromOwner(address) {
     const contract = await getSingerContract();
     const phones = await contract.getPhonesFromOwner(address);
     const phonesObj = phones.map(phone => {
-        console.log(phone);
         const [_id, model, brand, price, owner] = phone;
         return {
             id: _id.toString(),
