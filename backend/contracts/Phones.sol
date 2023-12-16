@@ -7,6 +7,7 @@ contract Phones {
         string model_name;
         string brand_name;
         uint256 price;
+        address owner;
     }
 
     Phone[] public phones;
@@ -24,20 +25,25 @@ contract Phones {
             "You can only create 10 phones"
         );
         uint256 id = phones.length;
-        phones.push(Phone(id, _model_name, _brand_name, _price));
+        phones.push(Phone(id, _model_name, _brand_name, _price, msg.sender));
         phoneToOwner[id] = msg.sender;
         ownerToPhones[msg.sender].push(id);
     }
 
     function getPhone(
         uint256 _id
-    ) public view returns (uint256, string memory, string memory, uint256) {
+    )
+        public
+        view
+        returns (uint256, string memory, string memory, uint256, address)
+    {
         require(_id < phones.length, "Phone with this id does not exist");
         return (
             phones[_id].id,
             phones[_id].model_name,
             phones[_id].brand_name,
-            phones[_id].price
+            phones[_id].price,
+            phones[_id].owner
         );
     }
 
@@ -95,6 +101,8 @@ contract Phones {
                 delete ownerToPhones[msg.sender][i];
             }
         }
+        // edit phone owner field
+        phones[_id].owner = _to;
     }
 
     function deletePhone(uint256 _id) public {
