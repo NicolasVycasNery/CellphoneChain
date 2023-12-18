@@ -16,8 +16,7 @@ export function TransferPhoneForm({ id }) {
     async function onSubmit(data) {
         const { address } = data;
         try {
-            console.log(address, address.length);
-            const hash = await transferPhone(id, address);
+            const hash = await transferPhone(address,id);
             Swal.fire({
                 title: 'Success!',
                 text: `Phone ${id} transferred with the transaction hash ${hash}`,
