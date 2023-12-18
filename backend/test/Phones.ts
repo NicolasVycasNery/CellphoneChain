@@ -72,7 +72,7 @@ describe('Phones', () => {
         await phones.connect(owner).createPhone('iPhone', 'Apple', 1000);
         await phones.connect(owner).deletePhone(0);
 
-        phones.connect(owner).acquireOwnerlessPhone(0);
+        await phones.connect(owner).acquireOwnerlessPhone(0);
         const phonesFrowOwner = await phones.getPhonesFromOwner(await owner.getAddress());
         const [id1,
             model_name1,
