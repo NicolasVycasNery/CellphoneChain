@@ -5,7 +5,7 @@ import contractABI from '../contracts/Phones.sol/Phones.json';
 import { ethers } from 'ethers';
 
 const RPC_URL = "http://localhost:8545";
-const ContractAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+const ContractAddress = "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9";
 
 console.log("Contract Address: ", ContractAddress, "is valid address: ", ethers.isAddress(ContractAddress));
 
@@ -15,11 +15,7 @@ var provider;
 
 async function loadWeb3() {
     if (web3Provider && signer && provider) {
-        return {
-            web3Provider,
-            signer,
-            provider
-        }
+        return { web3Provider, signer, provider }
     }
     web3Provider;
     // Modern dapp browsers...
@@ -46,11 +42,7 @@ async function loadWeb3() {
     signer = await provider.getSigner(
         window.ethereum.selectedAddress
     );
-    return {
-        signer,
-        provider,
-        web3Provider
-    }
+    return { signer, provider, web3Provider }
 }
 
 async function getSingerContract() {
@@ -128,8 +120,9 @@ export async function getPhonesPage(page, limit) {
 }
 
 export async function transferPhone(address, id) {
-    const contract = await getProviderContract();
-    const tx = await contract.transferPhone(address, id);
+    const contract = await getProviderContract()
+    console.log(typeof id, id)
+    const tx = await contract.transferPhone(address, parseInt(id));
     await tx.wait();
     return tx.hash;
 }
