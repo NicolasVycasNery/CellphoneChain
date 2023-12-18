@@ -1,10 +1,12 @@
-import { useEffect, } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getPhone, updatePhone } from "../../services/web3";
 
 export function EditPhoneForm({ id }) {
+    const [loadPhone, setLoadPhone] = useState(null);
+    const navigate = useNavigate();
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
         defaultValues: {
             id: 0,
@@ -17,13 +19,14 @@ export function EditPhoneForm({ id }) {
     async function onSubmit(data) {
         const { id, model, brand, price } = data;
         try {
-            const hash = updatePhone(id, model, brand, price);
-            Swal.fire({
+            const hash = await updatePhone(id, model, brand, price);
+            await Swal.fire({
                 title: 'Success!',
-                text: `Phone ${model} created with the transaction hash ${hash}`,
+                text: `Phone ${model} updated with hash ${hash}`,
                 icon: 'success',
                 confirmButtonText: 'Ok'
             })
+            navigate('/my-phones-page');
         } catch (e) {
             Swal.fire({
                 title: 'Error!',
@@ -38,12 +41,15 @@ export function EditPhoneForm({ id }) {
         async function load() {
             const phone = await getPhone(id);
             const { id: _id, model, brand, price, owner } = phone;
-            reset({
+            console.log(phone);
+            const data = {
                 id: _id,
                 model,
                 brand,
-                price,
-            })
+                price: parseInt(price)
+            }
+            setLoadPhone(data);
+            reset(data)
         }
         load();
     }, [id]);
@@ -87,7 +93,6 @@ export function EditPhoneForm({ id }) {
                     {...register('model', {
                         required: true,
                         minLength: 2,
-                        pattern: /^[A-Z]+$/i,
                     })}
                     className="text-black bg-gray-200 p-2 rounded shadow-lg"
                 />
@@ -99,10 +104,16 @@ export function EditPhoneForm({ id }) {
                 {errors.brand && <span className="text-red-500">
                     This field is required
                 </span>}
-                <select name="brand" id="brand" className="text-black bg-gray-200 p-2 rounded shadow-lg">
+                <select name="brand" id="brand" className="text-black bg-gray-200 p-2 rounded shadow-lg"
+                    {...register('brand', {
+                        required: true,
+                    })
+                    }
+                >
                     {brands.map((brand, index) => (
                         <option key={index} value={brand}>{brand}</option>
                     ))}
+                    {loadPhone && <option value={loadPhone.brand} selected>{loadPhone.brand}</option>}
                 </select>
             </div>
             <div className="flex flex-col">
@@ -124,14 +135,14 @@ export function EditPhoneForm({ id }) {
                     })}
                 />
             </div>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-col">
                 <button
-                    className="cursor-pointer my-5 bg-green-500 hover:bg-green-400 p-2 rounded shadow-lg"
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                     type="submit">
                     Edit
                 </button>
                 <Link
-                    className="cursor-pointer my-5 bg-red-500 hover:bg-red-400 p-2 rounded shadow-lg"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center"
                     to={`/my-phones-page`}
                 >
                     Cancel

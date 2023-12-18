@@ -67,13 +67,13 @@ export function PhoneCard({ phone, isOwner = false }) {
                 isOwner && (
                     <div className="flex flex-col gap-2 text-lg">
                         <Link
-                            to={`/edit-phone-page?id=${id}`}
+                            to={`/edit-phone-page/${id}`}
                             className="bg-green-500 p-2 rounded shadow-lg text-center"
                         >
                             Edit
                         </Link>
                         <Link
-                            to={`/transfer-phone-page?id=${id}`}
+                            to={`/transfer-phone-page/${id}`}
                             className="bg-yellow-400 p-2 rounded shadow-lg text-center"
                         >
                             Transfer

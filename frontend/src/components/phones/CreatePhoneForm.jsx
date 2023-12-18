@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { createPhone } from "../../services/web3";
-import { redirect } from "react-router-dom";
+
 export function CreatePhoneForm() {
+    const navigate = useNavigate();
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: {
             model: '',
@@ -15,19 +17,17 @@ export function CreatePhoneForm() {
         const { model, brand, price } = data;
         console.log(model, brand, price);
         try {
-            const hash = createPhone(model, brand, price);
-            Swal.fire({
+            const hash = await createPhone(model, brand, price);
+            await Swal.fire({
                 title: 'Success!',
                 text: `Phone ${model} created with the transaction hash ${hash}`,
                 icon: 'success',
                 confirmButtonText: 'Ok',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                onClose: () => {
-                    // redirect to my-phones-page
-                    redirect('/my-phones-page');
-                }
             })
+
+            navigate('/my-phones-page');
 
         } catch (e) {
             Swal.fire({
@@ -121,8 +121,15 @@ export function CreatePhoneForm() {
                 })}
             />
         </div>
-        <button
-            className="cursor-pointer my-5 bg-green-500 hover:bg-green-400 p-2 rounded shadow-lg"
-            type="submit">Create</button>
+        <div className="flex flex-col">
+            <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                type="submit">
+                Create
+            </button>
+            <Link to="/my-phones-page" className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center">
+                Cancel
+            </Link>
+        </div>
     </form>)
 }

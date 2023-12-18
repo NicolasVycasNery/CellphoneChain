@@ -5,7 +5,9 @@ import contractABI from '../contracts/Phones.sol/Phones.json';
 import { ethers } from 'ethers';
 
 const RPC_URL = "http://localhost:8545";
-const ContractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const ContractAddress = "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9";
+
+console.log("Contract Address: ", ContractAddress, "is valid address: ", ethers.isAddress(ContractAddress));
 
 async function loadWeb3() {
     let web3Provider;
@@ -79,6 +81,10 @@ export async function getPhone(id) {
 }
 
 export async function getPhonesFromOwner(address) {
+    if (!ethers.isAddress(address)) {
+        throw new Error("Invalid address!");
+    }
+
     const contract = await getSingerContract();
     const phones = await contract.getPhonesFromOwner(address);
     const phonesObj = phones.map(phone => {

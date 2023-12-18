@@ -1,10 +1,12 @@
 import { useEffect, } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getPhone, transferPhone } from "../../services/web3";
 
 export function TransferPhoneForm({ id }) {
+    const navigate = useNavigate();
+
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm({
         defaultValues: {
             address: '',
@@ -14,13 +16,15 @@ export function TransferPhoneForm({ id }) {
     async function onSubmit(data) {
         const { address } = data;
         try {
-            const hash = transferPhone(id, address);
+            console.log(address, address.length);
+            const hash = await transferPhone(id, address);
             Swal.fire({
                 title: 'Success!',
-                text: `Phone ${id} transfered with the transaction hash ${hash}`,
+                text: `Phone ${id} transferred with the transaction hash ${hash}`,
                 icon: 'success',
                 confirmButtonText: 'Ok'
             })
+            navigate('/my-phones-page');
         } catch (e) {
             Swal.fire({
                 title: 'Error!',
@@ -49,7 +53,7 @@ export function TransferPhoneForm({ id }) {
         <form onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-2 text-white bg-gray-800 p-4 rounded shadow-lg">
             <p className="text-lg font-bold">
-                You are transfering the phone with id <span className="text-green-500">{id}</span>
+                You are transferring the phone with id <span className="text-green-500">{id}</span>
             </p>
             <p className="text-lg font-bold">
                 This action is <span className="text-red-500">irreversible</span>
@@ -70,9 +74,17 @@ export function TransferPhoneForm({ id }) {
                     This field is required and must be a valid address
                 </span>}
             </div>
-            <input type="submit"
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                value="Transfer Phone" />
+            <div className="flex flex-row gap-2">
+                <button type="submit"
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Transfer
+                </button>
+                <Link to="/my-phones-page"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center">
+                    Cancel
+                </Link>
+            </div>
         </form>
     </>)
 }

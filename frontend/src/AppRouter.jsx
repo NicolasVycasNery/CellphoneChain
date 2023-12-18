@@ -19,8 +19,8 @@ export function AppRouter() {
             <Route path="/create-phone-page" element={<CreatePhonePage />} />
             <Route path="/phone-list-page" element={<PhoneListPage />} />
             <Route path="/phone-table-page" element={<PhoneTablePage />} />
-            <Route path="/edit-phone-page" element={<EditPhonePage />} />
-            <Route path="/transfer-phone-page" element={<TransferPhonePage />} />
+            <Route path="/edit-phone-page/:id" element={<EditPhonePage />} />
+            <Route path="/transfer-phone-page/:id" element={<TransferPhonePage />} />
             <Route path="/phone-from-page" element={<PhoneFromPage />} />
         </Routes>
     );
