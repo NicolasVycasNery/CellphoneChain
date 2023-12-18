@@ -1,6 +1,7 @@
 
-import { useRecoilState } from 'recoil'
-import { menuState } from '../../store/BurgerMenuContext'
+import { Link } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { menuState } from '../../store/BurgerMenuContext';
 
 function BurgerIcon({
     width = "36px",
@@ -52,21 +53,21 @@ function Header() {
         <header className="bg-gray-800 text-white p-4 shadow-lg sticky top-0 z-10">
             <div className="flex justify-between">
                 <div className="flex justify-between flex-col">
-                    <h1 className="text-2xl">
+                    <Link to="/" className="text-2xl">
                         Cellphone Chain
-                    </h1>
-                    <h2 className="text-lg">
+                    </Link>
+                    <Link to="/" className="text-lg">
                         DAPP Demo
-                    </h2>
+                    </Link>
                 </div>
                 <div className="flex justify-between m-2">
                     <button onClick={() => setIsOpen(!isOpen)}>
-                    <BurgerIcon />
+                        <BurgerIcon />
                     </button>
                 </div>
             </div>
             <div>
-                
+
             </div>
         </header>
     );
