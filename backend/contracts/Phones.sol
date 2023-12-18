@@ -14,6 +14,25 @@ contract Phones {
     mapping(uint256 => address) public phoneToOwner;
     mapping(address => uint256[]) public ownerToPhones;
 
+    // Events
+    event PhoneCreated(
+        uint256 id,
+        string model_name,
+        string brand_name,
+        uint256 price,
+        address owner
+    );
+    event PhoneTransferred(uint256 id, address from, address to);
+    event PhoneDeleted(uint256 id, address owner);
+    event PhoneAcquired(uint256 id, address owner);
+    event PhoneUpdated(
+        uint256 id,
+        string model_name,
+        string brand_name,
+        uint256 price,
+        address owner
+    );
+
     uint constant MAX_PHONES = 10;
 
     function createPhone(
@@ -30,6 +49,8 @@ contract Phones {
         phones.push(Phone(id, _model_name, _brand_name, _price, msg.sender));
         phoneToOwner[id] = msg.sender;
         ownerToPhones[msg.sender].push(id);
+
+        emit PhoneCreated(id, _model_name, _brand_name, _price, msg.sender);
     }
 
     function getPhone(
@@ -110,6 +131,8 @@ contract Phones {
         }
         // edit phone owner field
         phones[_id].owner = _to;
+
+        emit PhoneTransferred(_id, msg.sender, _to);
     }
 
     function deletePhone(uint256 _id) public {
@@ -132,6 +155,8 @@ contract Phones {
         }
         // make the phone ownerless (set owner to 0x0)
         phones[_id].owner = address(0);
+
+        emit PhoneDeleted(_id, msg.sender);
     }
 
     function getPhoneCount() public view returns (uint256) {
@@ -139,6 +164,7 @@ contract Phones {
     }
 
     function acquireOwnerlessPhone(uint256 _id) public {
+        require(_id < phones.length, "This phone does not exist");
         require(
             phones[_id].owner == address(0),
             "This phone already has an owner"
@@ -151,6 +177,8 @@ contract Phones {
         phoneToOwner[_id] = msg.sender;
         ownerToPhones[msg.sender].push(_id);
         phones[_id].owner = address(msg.sender);
+
+        emit PhoneAcquired(_id, msg.sender);
     }
 
     function updatePhone(
@@ -166,5 +194,7 @@ contract Phones {
         phones[_id].model_name = _model_name;
         phones[_id].brand_name = _brand_name;
         phones[_id].price = _price;
+
+        emit PhoneUpdated(_id, _model_name, _brand_name, _price, msg.sender);
     }
 }
