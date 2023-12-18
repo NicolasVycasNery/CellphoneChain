@@ -5,12 +5,23 @@ import contractABI from '../contracts/Phones.sol/Phones.json';
 import { ethers } from 'ethers';
 
 const RPC_URL = "http://localhost:8545";
-const ContractAddress = "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9";
+const ContractAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
 
 console.log("Contract Address: ", ContractAddress, "is valid address: ", ethers.isAddress(ContractAddress));
 
+var web3Provider;
+var signer;
+var provider;
+
 async function loadWeb3() {
-    let web3Provider;
+    if (web3Provider && signer && provider) {
+        return {
+            web3Provider,
+            signer,
+            provider
+        }
+    }
+    web3Provider;
     // Modern dapp browsers...
     if (window.ethereum) {
         try {
@@ -29,10 +40,10 @@ async function loadWeb3() {
         throw new Error("Please install metamask to use this dApp!");
     }
 
-    const provider = new ethers.JsonRpcProvider(
+    provider = new ethers.JsonRpcProvider(
         RPC_URL
     )
-    const signer = await provider.getSigner(
+    signer = await provider.getSigner(
         window.ethereum.selectedAddress
     );
     return {
