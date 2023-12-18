@@ -23,7 +23,10 @@ export function PhoneCard({ phone, isOwner = false }) {
                 icon: 'success',
                 confirmButtonText: 'Ok'
             })
-            return;
+
+
+            // reload the page
+            window.location.reload();
         }
         try {
             const hash = await deletePhone(id);

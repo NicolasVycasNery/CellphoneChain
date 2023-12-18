@@ -58,10 +58,6 @@ export function CreatePhoneForm() {
         "Asus"
     ]
 
-    // shuffle brands
-    brands.sort(() => Math.random() - 0.5);
-
-
     return (<form onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-2 text-white bg-gray-800 p-4 rounded shadow-lg">
         <div className="flex flex-col">
