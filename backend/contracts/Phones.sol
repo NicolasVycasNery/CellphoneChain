@@ -14,15 +14,17 @@ contract Phones {
     mapping(uint256 => address) public phoneToOwner;
     mapping(address => uint256[]) public ownerToPhones;
 
+    uint constant MAX_PHONES = 10;
+
     function createPhone(
         string memory _model_name,
         string memory _brand_name,
         uint256 _price
     ) public {
-        // an owner can only create 10 phones
+        // an owner can only create a phone if they don't already own the maximum number of phones
         require(
-            ownerToPhones[msg.sender].length < 10,
-            "You can only create 10 phones"
+            ownerToPhones[msg.sender].length < MAX_PHONES,
+            "You already own the maximum number of phones"
         );
         uint256 id = phones.length;
         phones.push(Phone(id, _model_name, _brand_name, _price, msg.sender));
@@ -85,20 +87,25 @@ contract Phones {
             msg.sender == phoneToOwner[_id],
             "You are not the owner of this phone"
         );
-        if (msg.sender == _to) {
-            revert("You already own this phone");
-        }
-        if (ownerToPhones[_to].length == 10) {
-            revert("The receiver already owns 10 phones");
-        }
+        require(
+            ownerToPhones[_to].length < MAX_PHONES,
+            "You already own the maximum number of phones"
+        );
+        require(msg.sender != _to, "You already own this phone");
+
         // change owner
         phoneToOwner[_id] = _to;
         // add phone to receiver
         ownerToPhones[_to].push(_id);
         // remove phone from sender
-        for (uint256 i = 0; i < ownerToPhones[msg.sender].length; i++) {
+        uint256 lastIndex = ownerToPhones[msg.sender].length - 1;
+        for (uint256 i = 0; i <= lastIndex; i++) {
             if (ownerToPhones[msg.sender][i] == _id) {
-                delete ownerToPhones[msg.sender][i];
+                ownerToPhones[msg.sender][i] = ownerToPhones[msg.sender][
+                    lastIndex
+                ];
+                ownerToPhones[msg.sender].pop();
+                break;
             }
         }
         // edit phone owner field
@@ -110,14 +117,40 @@ contract Phones {
             msg.sender == phoneToOwner[_id],
             "You are not the owner of this phone"
         );
-        delete phones[_id];
+        // remove phone from phoneToOwner
         delete phoneToOwner[_id];
-        // remove phone from sender
-        for (uint256 i = 0; i < ownerToPhones[msg.sender].length; i++) {
+        // remove phone from ownerToPhones
+        uint256 lastIndex = ownerToPhones[msg.sender].length - 1;
+        for (uint256 i = 0; i <= lastIndex; i++) {
             if (ownerToPhones[msg.sender][i] == _id) {
-                delete ownerToPhones[msg.sender][i];
+                ownerToPhones[msg.sender][i] = ownerToPhones[msg.sender][
+                    lastIndex
+                ];
+                ownerToPhones[msg.sender].pop();
+                break;
             }
         }
+        // make the phone ownerless (set owner to 0x0)
+        phones[_id].owner = address(0);
+    }
+
+    function getPhoneCount() public view returns (uint256) {
+        return phones.length;
+    }
+
+    function acquireOwnerlessPhone(uint256 _id) public {
+        require(
+            phones[_id].owner == address(0),
+            "This phone already has an owner"
+        );
+        require(
+            ownerToPhones[msg.sender].length < MAX_PHONES,
+            "You already own the maximum number of phones"
+        );
+
+        phoneToOwner[_id] = msg.sender;
+        ownerToPhones[msg.sender].push(_id);
+        phones[_id].owner = address(msg.sender);
     }
 
     function updatePhone(
