@@ -39,11 +39,12 @@ describe('Phones', () => {
     it('should allow to transfer a phone to a new owner', async () => {
         await phones.connect(owner).createPhone('iPhone', 'Apple', 1000);
         await phones.connect(owner).transferPhone(await addr1.getAddress(), 0);
-        const [id, model_name, brand_name, price] = await phones.getPhone(0);
+        const [id, model_name, brand_name, price, owner1] = await phones.getPhone(0);
         expect(id).to.eq(0);
         expect(model_name).to.eq('iPhone');
         expect(brand_name).to.eq('Apple');
         expect(price).to.eq(1000);
+        expect(owner1).to.eq(await addr1.getAddress());
     });
 
     it('should allow to get a phone by id', async () => {

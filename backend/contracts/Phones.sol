@@ -94,7 +94,7 @@ contract Phones {
         // change owner
         phoneToOwner[_id] = _to;
         // add phone to receiver
-        ownerToPhones[msg.sender].push(_id);
+        ownerToPhones[_to].push(_id);
         // remove phone from sender
         for (uint256 i = 0; i < ownerToPhones[msg.sender].length; i++) {
             if (ownerToPhones[msg.sender][i] == _id) {
