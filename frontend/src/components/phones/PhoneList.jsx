@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPhonesPage } from "../../services/web3";
 import { PhoneCard } from "./PhoneCard";
+import { Link } from "react-router-dom";
 
 export function PhoneList({ page, limit, isOwner = false }) {
     const [phones, setPhones] = useState([]);
@@ -20,10 +21,16 @@ export function PhoneList({ page, limit, isOwner = false }) {
     return (
         <div className="grid grid-cols-3 gap-4 my-5 p-5">
             {phones.length === 0 &&
-                <h1 className="text-white text-2xl text-center col-span-3">
-                    No phones found
-                </h1>
+                <>
+                    <h1 className="text-white text-2xl text-center col-span-3">
+                        No phones found
+                    </h1>
+                    <Link to="/phones/new" className="text-white text-2xl text-center col-span-3">
+                        Create new phone
+                    </Link>
+                </>
             }
+
             {phones.map((phone) => {
                 return (
                     <PhoneCard key={phone.id} phone={phone} isOwner={isOwner} />
