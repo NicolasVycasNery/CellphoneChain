@@ -5,13 +5,15 @@ import contractABI from '../contracts/Phones.sol/Phones.json';
 import { ethers } from 'ethers';
 
 const RPC_URL = "http://localhost:8545";
-const ContractAddress = "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9";
+const ContractAddress = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
 
 console.log("Contract Address: ", ContractAddress, "is valid address: ", ethers.isAddress(ContractAddress));
 
 var web3Provider;
 var signer;
 var provider;
+var contractSinger;
+var contractProvider;
 
 async function loadWeb3() {
     if (web3Provider && signer && provider) {
@@ -46,26 +48,25 @@ async function loadWeb3() {
 }
 
 async function getSingerContract() {
+    if (contractSinger) {
+        return contractSinger;
+    }
     const { abi } = contractABI;
     const { provider } = await loadWeb3();
     // load contract
-    const contract = new ethers.Contract(ContractAddress, abi, provider);
-    return contract;
+    contractSinger = new ethers.Contract(ContractAddress, abi, provider);
+    return contractSinger;
 }
 
 async function getProviderContract() {
+    if (contractProvider) {
+        return contractProvider;
+    }
     const { abi } = contractABI;
     const { signer } = await loadWeb3();
     // load contract
-    const contract = new ethers.Contract(ContractAddress, abi, signer);
-    return contract;
-}
-
-export async function createPhone(model, brand, price) {
-    const contract = await getProviderContract();
-    const tx = await contract.createPhone(model, brand, price);
-    await tx.wait();
-    return tx.hash;
+    contractProvider = new ethers.Contract(ContractAddress, abi, signer);
+    return contractProvider;
 }
 
 export async function getPhone(id) {
